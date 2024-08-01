@@ -8,6 +8,7 @@ import com.dtech.notebook.service.HashService
 import com.dtech.notebook.service.TokenService
 import com.dtech.notebook.service.UserService
 import org.springframework.http.HttpStatusCode
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -15,23 +16,24 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 class AuthController(
     private val hashService: HashService,
     private val tokenService: TokenService,
     private val userService: UserService,
 ) {
     @PostMapping("/login")
-    fun login(@RequestBody payload: LoginDto): LoginResponseDto {
+    fun login(@RequestBody payload: LoginDto): ResponseEntity<LoginResponseDto> {
         val user = userService.findByName(payload.username) ?: throw ResponseStatusException(HttpStatusCode.valueOf(400), "Login failed")
 
         if (!hashService.checkBcrypt(payload.password, user.password)) {
             throw ResponseStatusException(HttpStatusCode.valueOf(400), "Login failed")
         }
-
-        return LoginResponseDto(
+        val data = LoginResponseDto(
             token = tokenService.createToken(user),
-        )
+        );
+        return ResponseEntity.ok().header("Authorization", "Bearer " + data.token)
+            .body(data)
     }
 
     @PostMapping("/register")

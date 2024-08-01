@@ -11,9 +11,9 @@ data class RegisterDto(
 )
 
 data class CreateNoteDto(
-    val note: String?,
+    val content: String?,
 )
 
 data class UpdateNoteDto(
-    val note: String?,
+    val content: String?,
 )

@@ -6,7 +6,7 @@ services:
     image: postgres:13
     container_name: 'notebookdb'
     ports:
-      - "5435:5432"
+      - "5432:5432"
     environment:
       - POSTGRES_USER=notebookuser
       - POSTGRES_PASSWORD=123456
@@ -15,6 +15,24 @@ services:
       - notebook-data:/var/lib/postgresql/data
     networks:
       - local
+
+
+  notebookbe:
+    build:
+      context: .
+    container_name: 'notebookbe'
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./notebook.env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://notebookdb:5432/notebookdb
+      - SPRING_DATASOURCE_USERNAME=notebookuser
+      - SPRING_DATASOURCE_PASSWORD=123456
+    networks:
+      - local
+    depends_on:
+      - notebookdb
 
 volumes:
   notebook-data: { }

@@ -6,5 +6,5 @@ data class LoginResponseDto(
 
 data class NoteDto(
     val id: Long,
-    val note: String?,
+    val content: String?,
 )

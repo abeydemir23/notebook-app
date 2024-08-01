@@ -13,5 +13,5 @@ data class Note(
     var user: User = User(),
 
     @Column
-    var note: String? = null,
+    var content: String? = null,
 )

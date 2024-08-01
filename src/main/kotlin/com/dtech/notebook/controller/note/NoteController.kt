@@ -25,9 +25,15 @@ class ItemController(
     @GetMapping("{id}")
     fun getNote(authentication: Authentication, @PathVariable id: String): NoteDto {
         val authUser = authentication.toUser()
+        val note = noteService.findById(id.toLong()) ?: throw ResponseStatusException(
+            HttpStatusCode.valueOf(404),
+            "Note not found"
+        )
+        if (note.user.id != authUser.id) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(403), "Not your item")
+        }
 
-        return noteService.findByUser(authUser).stream().filter { note -> note.id == id.toLong() }
-            .map { note -> note.toDto() }.findFirst().orElseThrow { ResponseStatusException(HttpStatusCode.valueOf(404), "Not Found") }
+        return note.toDto()
     }
 
     @PostMapping
@@ -36,7 +42,7 @@ class ItemController(
 
         val note = Note(
             user = authUser,
-            note = payload.note,
+            content = payload.content,
         )
 
         noteService.save(note)
@@ -56,7 +62,7 @@ class ItemController(
         if (note.id != id.toLong()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(409), "Note already exists")
         }
-        note.note = payload.note
+        note.content = payload.content
 
         noteService.save(note)
     }
