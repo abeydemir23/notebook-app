@@ -1,19 +1,6 @@
 version: '3.5'
 
 services:
-
-  db:
-    image: postgres:13
-    container_name: 'db'
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=notebookuser
-      - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=notebookdb
-    volumes:
-      - notebook-data:/var/lib/postgresql/data
-
   spring-boot-app:
     build:
       context: .
@@ -33,5 +20,3 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:80"
-volumes:
-  notebook-data: { }
