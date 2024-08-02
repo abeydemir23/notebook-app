@@ -36,11 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-.container, .container-fluid {
-  margin-top: 20px;
-}
-
-.ui.dropdown .visible.menu {
-  display: inline-block !important;
-}

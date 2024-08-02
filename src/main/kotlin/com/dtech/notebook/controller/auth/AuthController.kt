@@ -32,8 +32,7 @@ class AuthController(
         val data = LoginResponseDto(
             token = tokenService.createToken(user),
         );
-        return ResponseEntity.ok().header("Authorization", "Bearer " + data.token)
-            .body(data)
+        return ResponseEntity.ok().body(data)
     }
 
     @PostMapping("/register")

@@ -16,10 +16,12 @@ services:
     networks:
       - local
 
-
   notebookbe:
+    expose:
+      - "8080"
     build:
       context: .
+      dockerfile: Dockerfile
     container_name: 'notebookbe'
     ports:
       - "8080:8080"
@@ -31,12 +33,48 @@ services:
       - SPRING_DATASOURCE_PASSWORD=123456
     networks:
       - local
+      - notebookbe
     depends_on:
       - notebookdb
+
+
+  notebookfe:
+    expose:
+      - "3000"
+    build:
+      context: ./noteapp-ui/
+      dockerfile: Dockerfile
+    container_name: 'note-app-ui'
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_BACKEND_URL=http://notebookbe
+      - REACT_APP_BACKEND_PORT=8080
+    networks:
+      - local
+      - frontend
+    depends_on:
+      - notebookbe
+
+  proxy:
+    image: nginx:1.25.3
+    container_name: "proxy"
+    restart: always
+    ports:
+      - "9090:9090"
+    depends_on:
+      - notebookbe
+      - notebookfe
+    networks:
+      - frontend
 
 volumes:
   notebook-data: { }
 
 networks:
- local:
-  driver: bridge
+  local:
+    driver: bridge
+  notebookbe:
+    internal: true
+  frontend:
+    external: true
