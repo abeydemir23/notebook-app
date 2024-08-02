@@ -1,9 +1,9 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import ProjectList from "./pages/ProjectList"
-import ProjectCreate from "./pages/ProjectCreate"
-import ProjectEdit from "./pages/ProjectEdit"
-import ProjectShow from "./pages/ProjectShow"
+import ListNote from "./pages/ListNote"
+import ProjectCreate from "./pages/CreateNote"
+import EditNote from "./pages/EditNote"
+import ShowNote from "./pages/ShowNote"
 import Login from "./pages/Login"
 import Registration from "./pages/Registration"
 
@@ -13,10 +13,10 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Login />} />
         <Route exact path="/signup" element={<Registration />} />
-        <Route exact path="/dashboard" element={<ProjectList />} />
+        <Route exact path="/dashboard" element={<ListNote />} />
         <Route path="/create" element={<ProjectCreate />} />
-        <Route path="/edit/:id" element={<ProjectEdit />} />
-        <Route path="/show/:id" element={<ProjectShow />} />
+        <Route path="/edit/:id" element={<EditNote />} />
+        <Route path="/show/:id" element={<ShowNote />} />
       </Routes>
     </Router>
   );

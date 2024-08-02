@@ -2,25 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Layout from "../components/Layout"
+import {API_URL} from "../settings";
 
 
-function ProjectShow() {
+function ShowNote() {
     const navigate = useNavigate();
     const [id, setId] = useState(useParams().id)
     const [note, setNote] = useState({ id: 0, content: '' })
-    // const axiosInstance = axios.create({
-    //     baseURL: 'http://localhost:8080',
-    // });
 
-    let url = 'http://notebookbe:8080/api';
     const axiosInstance = axios.create({
-        baseURL: url,
+        baseURL: API_URL,
     });
 
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Access-Control-Allow-Origin': '*',
         }
     };
 
@@ -61,4 +57,4 @@ function ProjectShow() {
     );
 }
 
-export default ProjectShow;
+export default ShowNote;

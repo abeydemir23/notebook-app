@@ -3,9 +3,10 @@ import {Link, useNavigate} from "react-router-dom"
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import Layout from "../components/Layout"
+import {API_URL} from "../settings";
 
 
-function ProjecCreate() {
+function CreateNote() {
     const [content, setContent] = useState('')
     const [isSaving, setIsSaving] = useState(false)
     const navigate = useNavigate();
@@ -16,19 +17,13 @@ function ProjecCreate() {
         }
     }, [])
 
-    // const axiosInstance = axios.create({
-    //     baseURL: 'http://localhost:8080',
-    // });
-
-    let url = 'http://notebookbe:8080/api';
     const axiosInstance = axios.create({
-        baseURL: url,
+        baseURL: API_URL,
     });
 
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Access-Control-Allow-Origin': '*',
         }
     };
 
@@ -99,4 +94,4 @@ function ProjecCreate() {
     );
 }
 
-export default ProjecCreate;
+export default CreateNote;

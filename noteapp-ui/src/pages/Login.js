@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom"
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import Layout from "../components/Layout"
+import {API_URL} from "../settings";
 
 function Login() {
     const navigate = useNavigate();
@@ -15,23 +16,16 @@ function Login() {
             navigate("/dashboard");
         }
     }, [])
-    let url = 'http://notebookbe:8080/api';
     const axiosInstance = axios.create({
-        baseURL: url,
+        baseURL: API_URL,
     });
-
-    const config = {
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-        }
-    };
 
     const handleSave = () => {
         setIsSaving(true);
-        axiosInstance.post('http://notebookbe:8080/api/auth/login', {
+        axiosInstance.post('/auth/login', {
             username: username,
             password: password
-        }, config)
+        })
             .then(function (response) {
                 localStorage.setItem("user", JSON.stringify(response.data));
                 localStorage.setItem("token", response.data.token);

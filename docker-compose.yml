@@ -2,9 +2,9 @@ version: '3.5'
 
 services:
 
-  notebookdb:
+  db:
     image: postgres:13
-    container_name: 'notebookdb'
+    container_name: 'db'
     ports:
       - "5432:5432"
     environment:
@@ -13,68 +13,25 @@ services:
       - POSTGRES_DB=notebookdb
     volumes:
       - notebook-data:/var/lib/postgresql/data
-    networks:
-      - local
 
-  notebookbe:
-    expose:
-      - "8080"
+  spring-boot-app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: 'notebookbe'
     ports:
       - "8080:8080"
-    env_file:
-      - ./notebook.env
+    depends_on:
+      - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://notebookdb:5432/notebookdb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/notebookdb
       - SPRING_DATASOURCE_USERNAME=notebookuser
       - SPRING_DATASOURCE_PASSWORD=123456
-    networks:
-      - local
-      - notebookbe
-    depends_on:
-      - notebookdb
 
-
-  notebookfe:
-    expose:
-      - "3000"
+  react-app:
     build:
-      context: ./noteapp-ui/
+      context: ./noteapp-ui
       dockerfile: Dockerfile
-    container_name: 'note-app-ui'
     ports:
-      - "3000:3000"
-    environment:
-      - REACT_APP_BACKEND_URL=http://notebookbe
-      - REACT_APP_BACKEND_PORT=8080
-    networks:
-      - local
-      - frontend
-    depends_on:
-      - notebookbe
-
-  proxy:
-    image: nginx:1.25.3
-    container_name: "proxy"
-    restart: always
-    ports:
-      - "9090:9090"
-    depends_on:
-      - notebookbe
-      - notebookfe
-    networks:
-      - frontend
-
+      - "3000:80"
 volumes:
   notebook-data: { }
-
-networks:
-  local:
-    driver: bridge
-  notebookbe:
-    internal: true
-  frontend:
-    external: true
